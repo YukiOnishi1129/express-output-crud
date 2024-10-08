@@ -5,7 +5,6 @@ services:
       context: .
       dockerfile: ./backend/Dockerfile
     volumes:
-      - ./backend:/backend
       - /etc/localtime:/etc/localtime:ro
     ports:
       - ${BACKEND_PORT}:${BACKEND_CONTAINER_PORT}
