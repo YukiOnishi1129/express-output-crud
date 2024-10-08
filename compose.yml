@@ -3,7 +3,7 @@ services:
     container_name: ${BACKEND_CONTAINER_NAME}
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./backend/Dockerfile
     volumes:
       - ./backend:/backend
       - /etc/localtime:/etc/localtime:ro
