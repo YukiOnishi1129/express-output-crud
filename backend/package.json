@@ -6,7 +6,7 @@
     "start": "nodemon ./dist/index.js",
     "build": "npx tsc",
     "build:watch": "npx tsc",
-    "dev": "npm run build:watch & npm run start",
+    "dev": "nodemon --watch 'src/**/*' --exec 'ts-node' src/index.ts",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
     "migration:generate": "npm run typeorm -- migration:generate src/database/migrations/$NAME  --dataSource src/config/migrationDataSource.ts",
     "migration:run": "npm run typeorm -- migration:run --dataSource src/config/migrationDataSource.ts",
