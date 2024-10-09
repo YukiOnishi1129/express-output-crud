@@ -9,8 +9,8 @@
     "dev": "npm run build:watch & npm run start",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
     "migration:generate": "npm run typeorm -- migration:generate src/database/migrations/$NAME  --dataSource src/config/dataSource.ts",
-    "migration:run": "npm run typeorm -- migration:run",
-    "migration:revert": "npm run typeorm -- migration:revert"
+    "migration:run": "npm run typeorm -- migration:run --dataSource src/config/dataSource.ts",
+    "migration:revert": "npm run typeorm -- migration:revert --dataSource src/config/dataSource.ts"
   },
   "keywords": [],
   "author": "",
