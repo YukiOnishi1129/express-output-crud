@@ -61,3 +61,27 @@ todosのテーブルがあればOK
 ```
 
 ### seeding 実行　(初期データ作成)
+
+```
+<!-- 事前にdbコンテナを起動しておく -->
+docker compose up -d
+
+cd backend
+
+<!-- seeding実行 -->
+npm run seed:run
+
+```
+
+### rollback 実行
+
+```
+<!-- 事前にdbコンテナを起動しておく -->
+docker compose up -d
+
+cd backend
+
+<!-- rollback実行 -->
+npm run migration:revert
+
+```

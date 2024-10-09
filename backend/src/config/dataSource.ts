@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 
 dotenv.config();
 
-export const dataSource = new DataSource({
+export const AppDataSource = new DataSource({
   type: 'mysql',
   host: 'localhost',
   port: 3306,
