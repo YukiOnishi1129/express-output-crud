@@ -1,19 +1,8 @@
-import { Router } from 'express';
-import { AppDataSource } from '../config/dataSource';
-import { Todo } from '../domain/entity/todo';
+import { Express } from 'express';
 
-const router = Router();
+import { getTodoList } from '../controller/todo';
+import { DataSource } from 'typeorm';
 
-// GET /todos - 全てのTODOリストを取得
-router.get('/todos', async (req, res) => {
-  try {
-    const todoRepository = AppDataSource.getRepository(Todo);
-    const todos = await todoRepository.find();
-    res.json(todos);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-export default router;
+export const setTodoRoute = (app: Express, db: DataSource) => {
+  app._router.get('/todos', getTodoList(db));
+};

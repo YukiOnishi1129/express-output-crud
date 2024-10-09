@@ -10,8 +10,8 @@ export const AppDataSource = new DataSource({
   username: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
-  entities: ['src/domain/entity/*.js'],
-  migrations: ['src/database/migrations/**/*.js'],
+  entities: ['src/domain/entity/*.ts'],
+  migrations: ['src/database/migrations/**/*.ts'],
   logging: true,
   synchronize:
     process.env.NODE_ENV !== 'staging' && process.env.NODE_ENV !== 'production',
