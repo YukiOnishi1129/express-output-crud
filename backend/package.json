@@ -6,7 +6,11 @@
     "start": "nodemon ./dist/index.js",
     "build": "npx tsc",
     "build:watch": "npx tsc",
-    "dev": "npm run build:watch & npm run start"
+    "dev": "npm run build:watch & npm run start",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:generate": "npm run typeorm -- migration:generate src/database/migrations/$NAME  --dataSource src/config/dataSource.ts",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert"
   },
   "keywords": [],
   "author": "",
@@ -14,12 +18,21 @@
   "description": "",
   "dependencies": {
     "dotenv": "^16.4.5",
-    "express": "^4.21.0"
+    "express": "^4.21.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.3",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.5",
+    "@typescript-eslint/eslint-plugin": "^8.8.1",
+    "@typescript-eslint/parser": "^8.8.1",
+    "eslint": "^9.12.0",
+    "eslint-config-prettier": "^9.1.0",
     "nodemon": "^3.1.7",
+    "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   }
