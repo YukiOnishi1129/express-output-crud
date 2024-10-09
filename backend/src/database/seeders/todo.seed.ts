@@ -1,8 +1,8 @@
-import { AppDataSource } from '../../config/dataSource';
-import { Todo } from '../../domain/entity/Todo';
+import { MigrationDataSource } from '../../config/migrationDataSource';
+import { Todo } from '../../domain/entity/todo';
 
 export const TodoSeedData = async () => {
-  const dataSource = await AppDataSource.initialize();
+  const dataSource = await MigrationDataSource.initialize();
   const todoRepository = dataSource.getRepository(Todo);
 
   // サンプルデータ

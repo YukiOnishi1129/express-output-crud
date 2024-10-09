@@ -5,11 +5,17 @@ services:
       context: .
       dockerfile: ./backend/Dockerfile
     volumes:
+      - ./backend:/backend
       - /etc/localtime:/etc/localtime:ro
     ports:
       - ${BACKEND_PORT}:${BACKEND_CONTAINER_PORT}
     environment:
       - PORT=${BACKEND_CONTAINER_PORT}
+      - MYSQL_CONTAINER_NAME=${MYSQL_CONTAINER_NAME}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
       - TZ=Asia/Tokyo
     depends_on:
       - db
@@ -21,9 +27,10 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DEFAULT_AUTHENTICATION_PLUGIN=caching_sha2_password
       - "TZ=Asia/Tokyo"
     image: mysql:8.0
-    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --default-authentication-plugin=mysql_native_password
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
     volumes:
       - express_output_crud_data:/var/lib/mysql
       - ./mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf

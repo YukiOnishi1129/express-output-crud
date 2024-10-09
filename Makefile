@@ -11,7 +11,7 @@ dcu:
 dcd:
 	docker-compose down
 dcdv:
-	docker-compose down --v
+	docker-compose down -v
 
 # コンテナログイン
 ## DB コンテナログイン

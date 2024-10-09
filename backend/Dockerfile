@@ -5,6 +5,8 @@ WORKDIR /backend
 COPY /backend/package*.json .
 RUN npm install --frozen-lockfile
 
+RUN npm install -g nodemon
+
 COPY /backend .
 
 CMD ["npm", "run", "dev"]

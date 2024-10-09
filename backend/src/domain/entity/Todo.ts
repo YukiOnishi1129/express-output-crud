@@ -6,16 +6,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-type TodoType = {
-  readonly id: number;
-  title: string;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
 @Entity('todos')
-export class Todo implements TodoType {
+export class Todo {
   @PrimaryGeneratedColumn()
   readonly id!: number;
 

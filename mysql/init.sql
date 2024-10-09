@@ -1,4 +1,3 @@
 CREATE DATABASE IF NOT EXISTS EXPRESS_OUTPUT_CRUD_DB;
 
-ALTER USER 'user'@'%' IDENTIFIED WITH mysql_native_password BY 'pass';
-FLUSH PRIVILEGES;
+ALTER USER 'user'@'%' IDENTIFIED WITH caching_sha2_password BY 'pass';

@@ -8,9 +8,9 @@
     "build:watch": "npx tsc",
     "dev": "npm run build:watch & npm run start",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
-    "migration:generate": "npm run typeorm -- migration:generate src/database/migrations/$NAME  --dataSource src/config/dataSource.ts",
-    "migration:run": "npm run typeorm -- migration:run --dataSource src/config/dataSource.ts",
-    "migration:revert": "npm run typeorm -- migration:revert --dataSource src/config/dataSource.ts",
+    "migration:generate": "npm run typeorm -- migration:generate src/database/migrations/$NAME  --dataSource src/config/migrationDataSource.ts",
+    "migration:run": "npm run typeorm -- migration:run --dataSource src/config/migrationDataSource.ts",
+    "migration:revert": "npm run typeorm -- migration:revert --dataSource src/config/migrationDataSource.ts",
     "seed:run": "ts-node ./src/database/seeders/seed.ts"
   },
   "keywords": [],
@@ -20,7 +20,6 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
-    "mysql": "^2.18.1",
     "mysql2": "^3.11.3",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20"
