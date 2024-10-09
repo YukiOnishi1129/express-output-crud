@@ -13,12 +13,12 @@ const start = async () => {
   app.use(express.json());
 
   // ルートの設定
-  //   app.use('/api', todoRoutes);
 
   AppDataSource.initialize()
     .then((db) => {
       // ルーティング設定
-      setApiRoute(app, db);
+
+      app.use('/api', setApiRoute(app, db));
 
       app.listen(port, () => {
         console.log(`Server is running on http://localhost:${port}`);
