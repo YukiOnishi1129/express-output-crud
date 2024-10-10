@@ -12,7 +12,7 @@ import {
   UpdateExistingTodoParam,
   deleteExistingTodo,
 } from '@/service/todo.service';
-import { HttpError } from '@/shared/errors/HttpError';
+import { HttpError } from '@/shared/errors/httpError';
 
 export const validateTodoById = [
   check('id').isInt({ min: 1 }).withMessage('id must be a positive integer'),

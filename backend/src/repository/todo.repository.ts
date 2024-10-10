@@ -1,6 +1,6 @@
 import { AppDataSource } from '@/config/appDataSource';
 import { Todo } from '@/domain/entity/todo.entity';
-import { HttpError } from '@/shared/errors/HttpError';
+import { HttpError } from '@/shared/errors/httpError';
 import { FindManyOptions } from 'typeorm';
 
 export const findAllTodo = async (options?: FindManyOptions<Todo>) => {

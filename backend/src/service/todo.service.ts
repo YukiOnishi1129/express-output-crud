@@ -7,7 +7,7 @@ import {
   deleteTodo,
 } from '@/repository/todo.repository';
 import { Todo } from '@/domain/entity/todo.entity';
-import { HttpError } from '@/shared/errors/HttpError';
+import { HttpError } from '@/shared/errors/httpError';
 
 export type GetTodoListParam = {
   keyword?: string;
