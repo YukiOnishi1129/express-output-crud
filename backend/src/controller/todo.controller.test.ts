@@ -17,6 +17,10 @@ describe('Test todo.controller ', () => {
     next = jest.fn();
     jest.clearAllMocks();
   });
+  afterEach(async () => {
+    const todoRepo = AppDataSource.getInstance().getRepository(Todo);
+    await todoRepo.clear();
+  });
 
   describe('getTodoListHandler', () => {
     it('should return an empty todo list on success', async () => {

@@ -8,11 +8,6 @@ const dbName = 'test_db';
 const username = 'test_user';
 const password = 'test_password';
 
-const initializeDatabase = async () => {
-  // データベースの作成
-  await dataSource.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
-};
-
 global.beforeAll(async () => {
   mysqlContainer = await new GenericContainer('mysql:8.0')
     .withExposedPorts(3306)
@@ -35,8 +30,13 @@ global.beforeAll(async () => {
   // データソースを初期化
   dataSource = await AppDataSource.initialize();
 
-  // 必要に応じて、データベースの初期化処理を実行
-  await initializeDatabase();
+  // データベースの作成
+  await dataSource.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
+
+  // テーブルの作成
+  //   await dataSource.query(
+  //     `CREATE TABLE IF NOT EXISTS \`todos\` (\`id\` int NOT NULL AUTO_INCREMENT, \`title\` varchar(50) NOT NULL, \`content\` text NOT NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
+  //   );
 }, 30000);
 
 global.afterAll(async () => {
