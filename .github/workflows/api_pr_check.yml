@@ -1,9 +1,7 @@
 name: api_pr_check
 
 on:
-  push:
-    branches:
-      - "main"
+  pull_request:
 
 jobs:
   build:
