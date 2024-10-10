@@ -1,8 +1,9 @@
-import { Express } from 'express';
+import { Router, Request, Response, RequestHandler } from 'express';
 
-import { getTodoList } from '../controller/todo';
-import { DataSource } from 'typeorm';
+import { getTodoListHandler } from '../controller/todo';
 
-export const setTodoRoute = (app: Express, db: DataSource) => {
-  app._router.get('/todos', getTodoList(db));
-};
+const todoRouter = Router();
+
+todoRouter.get('/', getTodoListHandler);
+
+export default todoRouter;

@@ -1,9 +1,9 @@
-import { DataSource } from 'typeorm';
-import { Express } from 'express';
-import { setTodoRoute } from './todo';
+import { Router } from 'express';
+import todoRouter from './todo';
 
-export const setApiRoute = (app: Express, db: DataSource) => {
-  setTodoRoute(app, db);
+const apiRouter = Router();
 
-  return app._router;
-};
+// 各ドメインのルーティングを設定
+apiRouter.use('/todos', todoRouter);
+
+export default apiRouter;

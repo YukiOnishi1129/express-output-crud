@@ -2,9 +2,11 @@ import 'reflect-metadata';
 import * as dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import { AppDataSource } from './config/appDataSource';
-import { setApiRoute } from './routes';
+import apiRouter from './routes';
 
 dotenv.config();
+
+export const API_BASE_URL = '/api';
 
 const start = async () => {
   const app = express();
@@ -12,13 +14,10 @@ const start = async () => {
 
   app.use(express.json());
 
-  // ルートの設定
-
   AppDataSource.initialize()
-    .then((db) => {
+    .then(() => {
       // ルーティング設定
-
-      app.use('/api', setApiRoute(app, db));
+      app.use(API_BASE_URL, apiRouter);
 
       app.listen(port, () => {
         console.log(`Server is running on http://localhost:${port}`);

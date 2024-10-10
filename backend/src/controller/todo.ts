@@ -1,18 +1,23 @@
-import { Request, Response } from 'express';
-import { DataSource } from 'typeorm';
-import { check, validationResult } from 'express-validator';
-import { Todo } from '../domain/entity/todo';
-import { sendOK, sendError } from './response';
+import { RequestHandler } from 'express';
+import { validationResult } from 'express-validator';
 
-export const getTodoList = (db: DataSource) => {
-  return async (req: Request, res: Response): Promise<Response> => {
-    try {
-      const todoRepository = db.getRepository(Todo);
-      const todoList = await todoRepository.find();
-      return sendOK(res, todoList);
-    } catch (error) {
-      console.error(error);
-      return sendError(res, 500, 'Internal Server Error');
-    }
-  };
+import { sendOK, sendError } from './response';
+import { getTodoList } from '../service//todo';
+
+export const getTodoListHandler: RequestHandler = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const errorMessage = errors
+      .array()
+      .map((error) => error.msg)
+      .join(', ');
+    sendError(res, 400, errorMessage);
+  }
+  try {
+    const todoList = await getTodoList();
+    sendOK(res, todoList);
+  } catch (error) {
+    console.error(error);
+    sendError(res, 500, 'Internal Server Error');
+  }
 };
