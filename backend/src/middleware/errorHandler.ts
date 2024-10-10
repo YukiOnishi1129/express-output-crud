@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpError } from '@/shared/errors/httpError';
-import { sendError } from '@/controller/response';
+import { sendError } from '@/shared/response/sendResponse';
 
 export const errorHandler = (
   err: any,

@@ -1,4 +1,4 @@
-import e, { Response } from 'express';
+import { Response } from 'express';
 
 interface IResponseSchema<T = any> {
   data?: T;

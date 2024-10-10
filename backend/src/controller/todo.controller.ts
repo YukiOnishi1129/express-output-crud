@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { check, validationResult } from 'express-validator';
 
-import { sendSuccess, sendError } from './response';
+import { sendSuccess, sendError } from '@/shared/response/sendResponse';
 import {
   getTodoList,
   getTodoById,
