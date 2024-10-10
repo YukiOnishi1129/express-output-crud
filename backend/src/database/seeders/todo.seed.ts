@@ -1,5 +1,5 @@
 import { MigrationDataSource } from '../../config/migrationDataSource';
-import { Todo } from '../../domain/entity/todo';
+import { Todo } from '../../domain/entity/todo.entity';
 
 export const TodoSeedData = async () => {
   const dataSource = await MigrationDataSource.initialize();

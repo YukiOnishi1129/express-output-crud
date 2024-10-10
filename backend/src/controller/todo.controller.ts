@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { validationResult } from 'express-validator';
 
 import { sendOK, sendError } from './response';
-import { getTodoList } from '../service//todo';
+import { getTodoList } from '../service/todo.service';
 
 export const getTodoListHandler: RequestHandler = async (req, res) => {
   const errors = validationResult(req);
