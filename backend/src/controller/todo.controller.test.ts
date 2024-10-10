@@ -30,9 +30,7 @@ const initializeDatabase = async () => {
 
 describe('todo.controller.ts', () => {
   beforeAll(async () => {
-    // jest.setTimeout(10000);
     mysqlContainer = await new GenericContainer('mysql:8.0')
-      //   .withExposedPorts(3306, 3306)
       .withExposedPorts(3306)
       .withEnvironment({
         MYSQL_ROOT_PASSWORD: password,
@@ -72,7 +70,7 @@ describe('todo.controller.ts', () => {
     await getTodoListHandler(req, res, next);
 
     expect(sendSuccess).toHaveBeenCalledWith(res, 200, []);
-  }, 10000);
+  });
 
   it('should return a todo list with items', async () => {
     // テスト用データをDBに挿入
@@ -90,26 +88,5 @@ describe('todo.controller.ts', () => {
       200,
       expect.arrayContaining([expect.objectContaining({ title: 'Test Todo' })]),
     );
-  }, 10000);
-
-  //     it('should return todo list', async () => {
-  //       console.log('💧💧💧💧💧💧');
-  //       // テストデータを作成
-  //       const newTodo = new Todo();
-  //       newTodo.title = 'Test Todo';
-  //       newTodo.content = 'This is a test todo item.';
-
-  //       const todoRepository = AppDataSource.getInstance().getRepository(Todo);
-  //       await todoRepository.save(newTodo); // データベースに保存
-
-  //       // APIリクエスト
-  //       const response = await request(app).get('/api/todos');
-
-  //       // レスポンスの検証
-  //       expect(response.status).toBe(200);
-  //       expect(response.body).toBeInstanceOf(Array);
-  //       expect(response.body.length).toBeGreaterThan(0);
-  //       expect(response.body[0].title).toBe(newTodo.title);
-  //     });
-  //   });
+  });
 });
