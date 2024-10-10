@@ -17,3 +17,36 @@ export const findTodoById = async (id: number) => {
     },
   });
 };
+
+export const createTodo = async (todo: Todo) => {
+  const db = AppDataSource.getInstance();
+  const todoRepository = db.getRepository(Todo);
+  try {
+    return await todoRepository.insert(todo);
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+export const updateTodo = async (todo: Todo) => {
+  const db = AppDataSource.getInstance();
+  const todoRepository = db.getRepository(Todo);
+  try {
+    return await todoRepository.save(todo);
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+export const deleteTodo = async (id: number) => {
+  const db = AppDataSource.getInstance();
+  const todoRepository = db.getRepository(Todo);
+  try {
+    return await todoRepository.delete(id);
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
