@@ -11,5 +11,9 @@ export const findAllTodo = async (options?: FindManyOptions<Todo>) => {
 export const findTodoById = async (id: number) => {
   const db = AppDataSource.getInstance();
   const todoRepository = db.getRepository(Todo);
-  return await todoRepository.findBy({ id });
+  return await todoRepository.findOne({
+    where: {
+      id,
+    },
+  });
 };

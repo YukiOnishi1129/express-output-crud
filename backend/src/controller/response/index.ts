@@ -1,31 +1,51 @@
-import { Response } from 'express';
+import e, { Response } from 'express';
 
 interface IResponseSchema<T = any> {
   data?: T;
   status: number;
 }
 
+type ResponseSuccessStatus = 200 | 201 | 204;
+
+type ResponseErrorStatus = 400 | 401 | 403 | 404 | 500;
+
 export const respondWithSchema = <T>(
   response: IResponseSchema<T>,
 ): IResponseSchema<T> => response;
 
-export const sendOK = <T>(res: Response, data: T | null = null) =>
-  res.status(200).send(
-    respondWithSchema({
-      data,
-      status: 200,
-    }),
-  );
-
-export const sendError = <T>(
+export const sendSuccess = <T>(
   res: Response,
-  status: number,
+  status: ResponseSuccessStatus,
   data: T | null = null,
 ) => {
   return res.status(status).send(
     respondWithSchema({
       data,
-      status,
+      status: status,
     }),
   );
+};
+
+export const sendError = (
+  res: Response,
+  status: ResponseErrorStatus,
+  data: string[] | null = null,
+) => {
+  let errors: string[] | null = data;
+  switch (status) {
+    case 401:
+      errors = ['Unauthorized'];
+      break;
+    case 403:
+      errors = ['Forbidden'];
+      break;
+    case 404:
+      errors = ['Not Found'];
+      break;
+    case 500:
+      errors = ['Internal Server Error'];
+      break;
+    default:
+  }
+  return res.status(status).send({ errors });
 };

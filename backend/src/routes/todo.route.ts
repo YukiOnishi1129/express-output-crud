@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import {
+  validateTodoById,
   getTodoListHandler,
   getTodoByIdHandler,
 } from '@/controller/todo.controller';
@@ -8,6 +9,6 @@ import {
 const todoRouter = Router();
 
 todoRouter.get('/', getTodoListHandler);
-todoRouter.get('/:id', getTodoByIdHandler);
+todoRouter.get('/:id', validateTodoById, getTodoByIdHandler);
 
 export default todoRouter;
