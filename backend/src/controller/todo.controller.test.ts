@@ -23,7 +23,7 @@ const initializeDatabase = async () => {
   await dataSource.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
 };
 
-describe('todo.controller.ts', () => {
+describe('Test todo.controller ', () => {
   beforeAll(async () => {
     mysqlContainer = await new GenericContainer('mysql:8.0')
       .withExposedPorts(3306)
@@ -60,28 +60,83 @@ describe('todo.controller.ts', () => {
     await mysqlContainer.stop(); // コンテナを停止
   });
 
-  it('should return an empty todo list on success', async () => {
-    // 初期状態では空のTodoリストが返る
-    await getTodoListHandler(req, res, next);
+  describe('getTodoListHandler', () => {
+    it('should return an empty todo list on success', async () => {
+      // 初期状態では空のTodoリストが返る
+      await getTodoListHandler(req, res, next);
 
-    expect(sendSuccess).toHaveBeenCalledWith(res, 200, []);
-  });
-
-  it('should return a todo list with items', async () => {
-    // テスト用データをDBに挿入
-    const todoRepo = dataSource.getRepository(Todo);
-    await todoRepo.save({
-      title: 'Test Todo',
-      content: 'This is a test todo item.',
+      expect(sendSuccess).toHaveBeenCalledWith(res, 200, []);
     });
 
-    await getTodoListHandler(req, res, next);
+    it('should return a todo list with items', async () => {
+      // テスト用データをDBに挿入
+      const todoRepo = dataSource.getRepository(Todo);
+      await todoRepo.save({
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
 
-    // 正しい結果が返されるかを確認
-    expect(sendSuccess).toHaveBeenCalledWith(
-      res,
-      200,
-      expect.arrayContaining([expect.objectContaining({ title: 'Test Todo' })]),
-    );
+      await getTodoListHandler(req, res, next);
+
+      // 正しい結果が返されるかを確認
+      expect(sendSuccess).toHaveBeenCalledWith(
+        res,
+        200,
+        expect.arrayContaining([
+          expect.objectContaining({
+            title: 'Test Todo',
+            content: 'This is a test todo item.',
+          }),
+        ]),
+      );
+    });
+
+    it('should return a search todo list with items', async () => {
+      // テスト用データをDBに挿入
+      const todoRepo = dataSource.getRepository(Todo);
+      await todoRepo.save({
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
+      await todoRepo.save({
+        title: 'eest Todo2',
+        content: 'This is a test todo item2.',
+      });
+      await todoRepo.save({
+        title: 'Test Todo3',
+        content: 'This is a test todo item3.',
+      });
+
+      req.query = { keyword: 'Test' };
+      await getTodoListHandler(req, res, next);
+
+      // 正しい結果が返されるかを確認
+      expect(sendSuccess).toHaveBeenCalledWith(
+        res,
+        200,
+        expect.arrayContaining<Todo>([
+          expect.objectContaining({
+            title: 'Test Todo',
+            content: 'This is a test todo item.',
+          }),
+          expect.objectContaining({
+            title: 'Test Todo3',
+            content: 'This is a test todo item3.',
+          }),
+        ]),
+      );
+
+      //   想定外のデータが含まれていないかを確認
+      expect(sendSuccess).not.toHaveBeenCalledWith(
+        res,
+        200,
+        expect.arrayContaining<Todo>([
+          expect.objectContaining({
+            title: 'eest Todo2',
+            content: 'This is a test todo item2.',
+          }),
+        ]),
+      );
+    });
   });
 });
