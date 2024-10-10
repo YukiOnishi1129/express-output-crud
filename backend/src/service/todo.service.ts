@@ -32,10 +32,14 @@ export type CreateNewTodoParam = {
 };
 
 export const createNewTodo = async ({ title, content }: CreateNewTodoParam) => {
-  const todo = new Todo();
-  todo.title = title;
-  todo.content = content;
-  return await createTodo(todo);
+  const newTodo = new Todo();
+  newTodo.title = title;
+  newTodo.content = content;
+  const result = await createTodo(newTodo);
+  if (result instanceof Error) {
+    return result;
+  }
+  return await findTodoById(result.id);
 };
 
 export type UpdateExistingTodoParam = {

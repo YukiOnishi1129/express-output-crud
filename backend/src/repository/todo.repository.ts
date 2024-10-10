@@ -22,10 +22,11 @@ export const createTodo = async (todo: Todo) => {
   const db = AppDataSource.getInstance();
   const todoRepository = db.getRepository(Todo);
   try {
-    return await todoRepository.insert(todo);
+    const result = await todoRepository.save(todo);
+    return result;
   } catch (error) {
     console.error(error);
-    return error;
+    throw new Error(`Failed to create todo: ${error}`);
   }
 };
 

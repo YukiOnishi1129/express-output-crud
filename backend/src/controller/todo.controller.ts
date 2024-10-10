@@ -68,7 +68,9 @@ export const validateCreateTodo = [
 ];
 
 export const createNewTodoHandler: RequestHandler = async (req, res) => {
-  const errors = validationResult(req);
+  console.log('🔥');
+  console.log(req.body);
+  const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
     const errorMessage = errors.array().map((error) => error.msg as string);
     sendError(res, 400, errorMessage);
@@ -81,6 +83,10 @@ export const createNewTodoHandler: RequestHandler = async (req, res) => {
 
   try {
     const todo = await createNewTodo(param);
+    if (!todo) {
+      sendError(res, 404);
+      return;
+    }
     sendSuccess(res, 201, todo);
   } catch (error) {
     console.error(error);
