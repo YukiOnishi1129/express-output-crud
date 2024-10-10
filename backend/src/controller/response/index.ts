@@ -7,8 +7,6 @@ interface IResponseSchema<T = any> {
 
 type ResponseSuccessStatus = 200 | 201 | 204;
 
-type ResponseErrorStatus = 400 | 401 | 403 | 404 | 500;
-
 export const respondWithSchema = <T>(
   response: IResponseSchema<T>,
 ): IResponseSchema<T> => response;
@@ -28,7 +26,7 @@ export const sendSuccess = <T>(
 
 export const sendError = (
   res: Response,
-  status: ResponseErrorStatus,
+  status: number,
   data: string[] | null = null,
 ) => {
   let errors: string[] | null = data;

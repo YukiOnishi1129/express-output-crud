@@ -7,6 +7,7 @@ import {
   deleteTodo,
 } from '@/repository/todo.repository';
 import { Todo } from '@/domain/entity/todo.entity';
+import { HttpError } from '@/shared/errors/HttpError';
 
 export type GetTodoListParam = {
   keyword?: string;
@@ -35,11 +36,7 @@ export const createNewTodo = async ({ title, content }: CreateNewTodoParam) => {
   const newTodo = new Todo();
   newTodo.title = title;
   newTodo.content = content;
-  const result = await createTodo(newTodo);
-  if (result instanceof Error) {
-    return result;
-  }
-  return await findTodoById(result.id);
+  return await createTodo(newTodo);
 };
 
 export type UpdateExistingTodoParam = {
@@ -55,7 +52,7 @@ export const updateExistingTodo = async ({
 }: UpdateExistingTodoParam) => {
   const todo = await findTodoById(id);
   if (!todo) {
-    return new Error('Todo not found');
+    throw new HttpError(404, 'Todo not found');
   }
   todo.title = title;
   todo.content = content;
@@ -65,7 +62,7 @@ export const updateExistingTodo = async ({
 export const deleteExistingTodo = async (id: number) => {
   const todo = await findTodoById(id);
   if (!todo) {
-    return new Error('Todo not found');
+    throw new HttpError(404, 'Todo not found');
   }
   return await deleteTodo(id);
 };
