@@ -13,6 +13,29 @@ import {
   deleteExistingTodo,
 } from '@/service/todo.service';
 
+export const validateTodoById = [
+  check('id').isInt({ min: 1 }).withMessage('id must be a positive integer'),
+];
+
+export const validateCreateTodo = [
+  check('title')
+    .notEmpty()
+    .withMessage('title must not be empty')
+    .isLength({ max: 30 })
+    .withMessage('title must not exceed 30 characters'),
+  check('content').notEmpty().withMessage('content must not be empty'),
+];
+
+export const validateUpdateTodo = [
+  check('id').isInt({ min: 1 }).withMessage('id must be a positive integer'),
+  check('title')
+    .notEmpty()
+    .withMessage('title must not be empty')
+    .isLength({ max: 30 })
+    .withMessage('title must not exceed 30 characters'),
+  check('content').notEmpty().withMessage('content must not be empty'),
+];
+
 export const getTodoListHandler: RequestHandler = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -36,10 +59,6 @@ export const getTodoListHandler: RequestHandler = async (req, res) => {
   }
 };
 
-export const validateTodoById = [
-  check('id').isInt({ min: 1 }).withMessage('id must be a positive integer'),
-];
-
 export const getTodoByIdHandler: RequestHandler = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -60,17 +79,8 @@ export const getTodoByIdHandler: RequestHandler = async (req, res) => {
   }
 };
 
-export const validateCreateTodo = [
-  check('title').isEmpty().withMessage('title must not be empty'),
-  check('title').isString().withMessage('title must be a string'),
-  check('content').isEmpty().withMessage('content must not be empty'),
-  check('content').isString().withMessage('content must be a string'),
-];
-
 export const createNewTodoHandler: RequestHandler = async (req, res) => {
-  console.log('🔥');
-  console.log(req.body);
-  const errors = validationResult(req.body);
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorMessage = errors.array().map((error) => error.msg as string);
     sendError(res, 400, errorMessage);
@@ -93,14 +103,6 @@ export const createNewTodoHandler: RequestHandler = async (req, res) => {
     sendError(res, 500);
   }
 };
-
-export const validateUpdateTodo = [
-  check('id').isInt({ min: 1 }).withMessage('id must be a positive integer'),
-  check('title').isEmpty().withMessage('title must not be empty'),
-  check('title').isString().withMessage('title must be a string'),
-  check('content').isEmpty().withMessage('content must not be empty'),
-  check('content').isString().withMessage('content must be a string'),
-];
 
 export const updateTodoHandler: RequestHandler = async (req, res) => {
   const errors = validationResult(req);
