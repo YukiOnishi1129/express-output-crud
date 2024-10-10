@@ -44,8 +44,6 @@ export const getTodoByIdHandler: RequestHandler = async (req, res) => {
   }
   try {
     const todo = await getTodoById(Number(req.params.id));
-    console.log('🔥');
-    console.log(todo);
     if (!todo) {
       sendError(res, 404);
       return;

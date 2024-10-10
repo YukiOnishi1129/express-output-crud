@@ -47,5 +47,5 @@ export const sendError = (
       break;
     default:
   }
-  return res.status(status).send({ errors });
+  return res.status(status).send({ errors, status });
 };
