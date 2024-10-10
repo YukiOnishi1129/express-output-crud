@@ -1,10 +1,5 @@
 import { AppDataSource } from '@/config/appDataSource';
-import { StartedMySqlContainer, MySqlContainer } from '@testcontainers/mysql';
-import {
-  DockerComposeEnvironment,
-  GenericContainer,
-  StartedTestContainer,
-} from 'testcontainers';
+import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Todo } from '@/domain/entity/todo.entity';
 import { mockRequest, mockResponse } from 'jest-mock-req-res';
 import { DataSource } from 'typeorm';
