@@ -1,14 +1,15 @@
 import { AppDataSource } from '@/config/appDataSource';
 import { Todo } from '@/domain/entity/todo.entity';
+import { Request, Response, NextFunction } from 'express';
 import { mockRequest, mockResponse } from 'jest-mock-req-res';
 import { getTodoListHandler } from '@/controller/todo.controller';
-import { sendSuccess, sendError } from '@/shared/response/sendResponse';
+import { sendSuccess } from '@/shared/response/sendResponse';
 
 jest.mock('@/shared/response/sendResponse');
 
-let req: any;
-let res: any;
-let next: any;
+let req: Request;
+let res: Response;
+let next: NextFunction;
 
 describe('Test todo.controller ', () => {
   beforeEach(() => {

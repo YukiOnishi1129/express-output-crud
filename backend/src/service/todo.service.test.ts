@@ -1,8 +1,6 @@
 import { AppDataSource } from '@/config/appDataSource';
 import { Todo } from '@/domain/entity/todo.entity';
-import { mockRequest, mockResponse } from 'jest-mock-req-res';
-import { getTodoListHandler } from '@/controller/todo.controller';
-import { sendSuccess, sendError } from '@/shared/response/sendResponse';
+
 import { getTodoList } from '@/service/todo.service';
 
 describe('Test todo.service ', () => {

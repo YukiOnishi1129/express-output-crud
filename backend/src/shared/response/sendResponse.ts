@@ -1,6 +1,6 @@
 import { Response } from 'express';
 
-interface IResponseSchema<T = any> {
+interface IResponseSchema<T> {
   data?: T;
   status: number;
 }
