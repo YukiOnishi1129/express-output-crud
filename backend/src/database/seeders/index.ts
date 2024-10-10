@@ -1,3 +1,4 @@
+import 'tsconfig-paths/register';
 import { TodoSeedData } from './todo.seed';
 
 const SeedData = async () => {

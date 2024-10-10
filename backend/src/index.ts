@@ -1,8 +1,9 @@
 import 'reflect-metadata';
+import 'tsconfig-paths/register';
 import * as dotenv from 'dotenv';
-import express, { Request, Response } from 'express';
-import { AppDataSource } from './config/appDataSource';
-import apiRouter from './routes';
+import express from 'express';
+import { AppDataSource } from '@/config/appDataSource';
+import apiRouter from '@/routes';
 
 dotenv.config();
 

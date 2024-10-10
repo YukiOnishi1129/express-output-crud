@@ -1,6 +1,6 @@
-import { Router, Request, Response, RequestHandler } from 'express';
+import { Router } from 'express';
 
-import { getTodoListHandler } from '../controller/todo.controller';
+import { getTodoListHandler } from '@/controller/todo.controller';
 
 const todoRouter = Router();
 
