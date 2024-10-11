@@ -24,11 +24,11 @@ describe('Todo API E2E Test', () => {
         title: 'Test Todo',
         content: 'This is a test todo item.',
       };
-      const todo = await todoRepo.save(expected);
-      const response = await request(app).get(`/api/todos/${todo.id}`);
-      expect(response.status).toBe(200);
-      expect(response.body.data).toMatchObject({
-        id: todo.id,
+      const createdTodo = await todoRepo.save(expected);
+      const received = await request(app).get(`/api/todos/${createdTodo.id}`);
+      expect(received.status).toBe(200);
+      expect(received.body.data).toMatchObject({
+        id: createdTodo.id,
         title: expected.title,
         content: expected.content,
       });
@@ -37,12 +37,12 @@ describe('Todo API E2E Test', () => {
 
   describe('POST /api/todos', () => {
     it('should create a new todo on POST /api/todos', async () => {
-      const newTodo = { title: 'New Todo', content: 'This is a new todo.' };
+      const expected = { title: 'New Todo', content: 'This is a new todo.' };
 
-      const response = await request(app).post('/api/todos').send(newTodo);
+      const received = await request(app).post('/api/todos').send(expected);
 
-      expect(response.status).toBe(201);
-      expect(response.body.data).toMatchObject(newTodo);
+      expect(received.status).toBe(201);
+      expect(received.body.data).toMatchObject(expected);
     });
   });
 });
