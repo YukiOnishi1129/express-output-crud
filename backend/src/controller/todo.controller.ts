@@ -42,12 +42,6 @@ export const validateDeleteTodo = [
 ];
 
 export const getTodoListHandler: RequestHandler = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const errorMessage = errors.array().map((error) => error.msg as string);
-    sendError(res, 400, errorMessage);
-    return;
-  }
   const param: GetTodoListParam = {};
 
   const { keyword } = req.query;

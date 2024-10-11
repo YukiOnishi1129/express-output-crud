@@ -11,8 +11,9 @@ dotenv.config();
 
 export const API_BASE_URL = '/api';
 
-const start = async () => {
-  const app = express();
+export const app = express();
+
+export const start = async () => {
   const port = process.env.PORT || 3000;
 
   const corsOptions = {
@@ -30,13 +31,17 @@ const start = async () => {
       // ルーティング設定
       app.use(API_BASE_URL, apiRouter);
 
-      app.listen(port, () => {
-        console.log(`Server is running on http://localhost:${port}`);
-      });
+      if (process.env.NODE_ENV !== 'test') {
+        app.listen(port, () => {
+          console.log(`Server is running on http://localhost:${port}`);
+        });
+      }
     })
     .catch((error) => {
       console.error('Error during Data Source initialization:', error);
     });
 };
 
-start();
+if (process.env.NODE_ENV !== 'test') {
+  start();
+}

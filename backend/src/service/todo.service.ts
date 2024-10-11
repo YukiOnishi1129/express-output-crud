@@ -1,4 +1,5 @@
 import { FindManyOptions, Like } from 'typeorm';
+
 import {
   findAllTodo,
   findTodoById,
@@ -24,7 +25,11 @@ export const getTodoList = async ({ keyword }: GetTodoListParam) => {
 };
 
 export const getTodoById = async (id: number) => {
-  return await findTodoById(id);
+  const todo = await findTodoById(id);
+  if (!todo) {
+    throw new HttpError(404, 'Todo not found');
+  }
+  return todo;
 };
 
 export type CreateNewTodoParam = {

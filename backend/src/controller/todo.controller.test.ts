@@ -1,9 +1,16 @@
-import { AppDataSource } from '@/config/appDataSource';
-import { Todo } from '@/domain/entity/todo.entity';
 import { Request, Response, NextFunction } from 'express';
 import { mockRequest, mockResponse } from 'jest-mock-req-res';
-import { getTodoListHandler } from '@/controller/todo.controller';
-import { sendSuccess } from '@/shared/response/sendResponse';
+import { AppDataSource } from '@/config/appDataSource';
+import { Todo } from '@/domain/entity/todo.entity';
+
+import {
+  createNewTodoHandler,
+  deleteTodoHandler,
+  getTodoByIdHandler,
+  getTodoListHandler,
+  updateTodoHandler,
+} from '@/controller/todo.controller';
+import { sendSuccess, sendError } from '@/shared/response/sendResponse';
 
 jest.mock('@/shared/response/sendResponse');
 
@@ -11,7 +18,7 @@ let req: Request;
 let res: Response;
 let next: NextFunction;
 
-describe('Test todo.controller ', () => {
+describe('【Controller Test Todo】 ', () => {
   beforeEach(() => {
     req = mockRequest();
     res = mockResponse();
@@ -23,30 +30,28 @@ describe('Test todo.controller ', () => {
     await todoRepo.clear();
   });
 
-  describe('getTodoListHandler', () => {
-    it('should return an empty todo list on success', async () => {
-      // 初期状態では空のTodoリストが返る
+  describe('【getTodoListHandler】', () => {
+    it('Success: : get 0 data', async () => {
       await getTodoListHandler(req, res, next);
-
       expect(sendSuccess).toHaveBeenCalledWith(res, 200, []);
     });
 
-    it('should return a todo list with items', async () => {
-      // テスト用データをDBに挿入
+    it('Success: get data', async () => {
       const todoRepo = AppDataSource.getInstance().getRepository(Todo);
       await todoRepo.save({
+        id: 1,
         title: 'Test Todo',
         content: 'This is a test todo item.',
       });
 
       await getTodoListHandler(req, res, next);
 
-      // 正しい結果が返されるかを確認
       expect(sendSuccess).toHaveBeenCalledWith(
         res,
         200,
         expect.arrayContaining([
           expect.objectContaining({
+            id: 1,
             title: 'Test Todo',
             content: 'This is a test todo item.',
           }),
@@ -54,18 +59,20 @@ describe('Test todo.controller ', () => {
       );
     });
 
-    it('should return a search todo list with items', async () => {
-      // テスト用データをDBに挿入
+    it('Success: get searched data', async () => {
       const todoRepo = AppDataSource.getInstance().getRepository(Todo);
       await todoRepo.save({
+        id: 1,
         title: 'Test Todo',
         content: 'This is a test todo item.',
       });
       await todoRepo.save({
+        id: 2,
         title: 'eest Todo2',
         content: 'This is a test todo item2.',
       });
       await todoRepo.save({
+        id: 3,
         title: 'Test Todo3',
         content: 'This is a test todo item3.',
       });
@@ -73,33 +80,150 @@ describe('Test todo.controller ', () => {
       req.query = { keyword: 'Test' };
       await getTodoListHandler(req, res, next);
 
-      // 正しい結果が返されるかを確認
       expect(sendSuccess).toHaveBeenCalledWith(
         res,
         200,
         expect.arrayContaining<Todo>([
           expect.objectContaining({
+            id: 1,
             title: 'Test Todo',
             content: 'This is a test todo item.',
           }),
           expect.objectContaining({
+            id: 3,
             title: 'Test Todo3',
             content: 'This is a test todo item3.',
           }),
         ]),
       );
 
-      //   想定外のデータが含まれていないかを確認
       expect(sendSuccess).not.toHaveBeenCalledWith(
         res,
         200,
         expect.arrayContaining<Todo>([
           expect.objectContaining({
+            id: 2,
             title: 'eest Todo2',
             content: 'This is a test todo item2.',
           }),
         ]),
       );
+    });
+  });
+
+  describe('【getTodoByIdHandler】', () => {
+    it('Success: get data by id', async () => {
+      const todoRepo = AppDataSource.getInstance().getRepository(Todo);
+      await todoRepo.save({
+        id: 1,
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
+
+      req.params = { id: '1' };
+      await getTodoByIdHandler(req, res, next);
+
+      expect(sendSuccess).toHaveBeenCalledWith(
+        res,
+        200,
+        expect.objectContaining({
+          id: 1,
+          title: 'Test Todo',
+          content: 'This is a test todo item.',
+        }),
+      );
+    });
+
+    it('Fail: Not Found', async () => {
+      req.params = { id: '1' };
+      await getTodoByIdHandler(req, res, next);
+
+      expect(sendError).toHaveBeenCalledWith(res, 404, ['Todo not found']);
+    });
+  });
+
+  describe('【createNewTodoHandler】', () => {
+    it('Success: create new todo', async () => {
+      req.body = {
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      };
+
+      await createNewTodoHandler(req, res, next);
+
+      expect(sendSuccess).toHaveBeenCalledWith(
+        res,
+        201,
+        expect.objectContaining({
+          id: 1,
+          title: 'Test Todo',
+          content: 'This is a test todo item.',
+        }),
+      );
+    });
+  });
+
+  describe('【updateTodoHandler】', () => {
+    it('Success: update todo', async () => {
+      const todoRepo = AppDataSource.getInstance().getRepository(Todo);
+      await todoRepo.save({
+        id: 1,
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
+
+      req.params = { id: '1' };
+      req.body = {
+        title: 'Updated Todo',
+        content: 'This is an updated todo item.',
+      };
+
+      await updateTodoHandler(req, res, next);
+
+      expect(sendSuccess).toHaveBeenCalledWith(
+        res,
+        200,
+        expect.objectContaining({
+          id: 1,
+          title: 'Updated Todo',
+          content: 'This is an updated todo item.',
+        }),
+      );
+    });
+
+    it('Fail: Not Found', async () => {
+      req.params = { id: '1' };
+      req.body = {
+        title: 'Updated Todo',
+        content: 'This is an updated todo item.',
+      };
+
+      await updateTodoHandler(req, res, next);
+
+      expect(sendError).toHaveBeenCalledWith(res, 404, ['Todo not found']);
+    });
+  });
+
+  describe('【deleteTodoHandler】', () => {
+    it('Success: delete todo', async () => {
+      const todoRepo = AppDataSource.getInstance().getRepository(Todo);
+      await todoRepo.save({
+        id: 1,
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
+
+      req.params = { id: '1' };
+      await deleteTodoHandler(req, res, next);
+
+      expect(sendSuccess).toHaveBeenCalledWith(res, 204);
+    });
+
+    it('Fail: Not Found', async () => {
+      req.params = { id: '1' };
+      await deleteTodoHandler(req, res, next);
+
+      expect(sendError).toHaveBeenCalledWith(res, 404, ['Todo not found']);
     });
   });
 });
