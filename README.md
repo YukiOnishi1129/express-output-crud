@@ -29,7 +29,7 @@ CRUD 処理と以下の機能を実装
 | :------------------------------------------ | :------- | :------------- |
 | ユーザーに紐づく全 Todo データを取得        | GET      | /api/todos     |
 | Todo の ID に紐づく単一の Todo データを取得 | GET      | /api/todos/:id |
-| Todo 新規作成                               | POST     | /api/todo s    |
+| Todo 新規作成                               | POST     | /api/todos     |
 | Todo 更新                                   | PUT      | /api/todos/:id |
 | Todo 削除                                   | DELETE   | /api/todos/:id |
 
