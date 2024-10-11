@@ -1,7 +1,11 @@
 import { AppDataSource } from '@/config/appDataSource';
 import { Todo } from '@/domain/entity/todo.entity';
 
-import { getTodoById, getTodoList } from '@/service/todo.service';
+import {
+  createNewTodo,
+  getTodoById,
+  getTodoList,
+} from '@/service/todo.service';
 import { HttpError } from '@/shared/errors/httpError';
 
 describe('【Service Test Todo】 ', () => {
@@ -101,6 +105,20 @@ describe('【Service Test Todo】 ', () => {
       } catch (error) {
         expect(error).toEqual(new HttpError(404, 'Todo not found'));
       }
+    });
+  });
+
+  describe('【createNewTodo】', () => {
+    it('Success: create new todo', async () => {
+      const newTodo = {
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      };
+      const todo = await createNewTodo(newTodo);
+      expect(todo).toMatchObject({
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
     });
   });
 });
