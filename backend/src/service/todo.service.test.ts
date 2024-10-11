@@ -1,7 +1,8 @@
 import { AppDataSource } from '@/config/appDataSource';
 import { Todo } from '@/domain/entity/todo.entity';
 
-import { getTodoList } from '@/service/todo.service';
+import { getTodoById, getTodoList } from '@/service/todo.service';
+import { HttpError } from '@/shared/errors/httpError';
 
 describe('【Service Test Todo】 ', () => {
   afterEach(async () => {
@@ -75,6 +76,31 @@ describe('【Service Test Todo】 ', () => {
           }),
         ]),
       );
+    });
+  });
+
+  describe('【getTodoById】', () => {
+    it('Success: get data by id', async () => {
+      const todoRepo = AppDataSource.getInstance().getRepository(Todo);
+      await todoRepo.save({
+        id: 1,
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
+
+      const todo = await getTodoById(1);
+      expect(todo).toMatchObject({
+        id: 1,
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
+    });
+    it('Error: get data by id', async () => {
+      try {
+        await getTodoById(1);
+      } catch (error) {
+        expect(error).toEqual(new HttpError(404, 'Todo not found'));
+      }
     });
   });
 });
