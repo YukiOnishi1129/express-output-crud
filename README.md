@@ -1,22 +1,63 @@
 # express-output-crud
 
-## 開発手順
+## 技術構成
 
-### migration ファイル生成
+- typescript
+- express
+- typeorm
+- mysql
+- jest
+- [testcontainers](https://node.testcontainers.org/)
+
+## API 構成
+
+- API の接続確認は postman を用いて確認してみてください。
+- https://www.postman.com/
+
+### Todo
+
+|                                             | メソッド | URI            |
+| :------------------------------------------ | :------- | :------------- |
+| ユーザーに紐づく全 Todo データを取得        | GET      | /api/todos     |
+| Todo の ID に紐づく単一の Todo データを取得 | GET      | /api/todos/:id |
+| Todo 新規作成                               | POST     | /api/todo s    |
+| Todo 更新                                   | PUT      | /api/todos/:id |
+| Todo 削除                                   | DELETE   | /api/todos/:id |
+
+## 環境構築
+
+### 1. env ファイルを作成
+
+- ルートディレクトリ直下に「.env」ファイルを作成
+- 「.env.sample」の記述をコピー
 
 ```
-<!-- 事前にdbコンテナを起動しておく -->
-docker compose up -d
+touch .env
+```
 
+- backend ディレクトリに移動し、「.env」ファイルを作成
+- backend/.env.sample」ファイルの記述をコピー
+
+```
 cd backend
+touch .env
+```
 
-<!-- migration ファイル生成コマンド -->
-NAME=TableName npm run migration:generate
+### 2. docker 起動
 
-<!-- todosテーブルを作りたい場合 -->
-NAME=TodoTable npm run migration:generate
+- ビルド
 
 ```
+docker compose build
+```
+
+- コンテナ起動
+
+```
+docker compose up
+```
+
+## 3. データ用意
 
 ### migration 実行　(テーブル作成)
 
@@ -73,6 +114,29 @@ npm run seed:run
 
 ```
 
+### 4. API 接続
+
+- 以下の url に接続し、レスポンスが返ってくる事を確認
+  - http://localhost:4000/api/todos
+
+## 開発手順
+
+### migration ファイル生成
+
+```
+<!-- 事前にdbコンテナを起動しておく -->
+docker compose up -d
+
+cd backend
+
+<!-- migration ファイル生成コマンド -->
+NAME=TableName npm run migration:generate
+
+<!-- todosテーブルを作りたい場合 -->
+NAME=TodoTable npm run migration:generate
+
+```
+
 ### rollback 実行
 
 ```
@@ -85,3 +149,34 @@ cd backend
 npm run migration:revert
 
 ```
+
+### テスト
+
+- backend ディレクトリで実行してください
+
+```
+cd backend
+```
+
+- 単体テスト
+
+```
+npm run test
+```
+
+- E2E テスト
+
+```
+npm run test:e2e
+```
+
+## フロントエンドとの繋ぎ込みの確認
+
+```
+cd frontend
+
+npm run dev
+
+```
+
+- http://localhost:5173 に接続
