@@ -14,12 +14,6 @@ export const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  if (err.name === 'CorsError') {
-    // CORSエラーの場合の処理
-    sendError(res, 403, ['CORS policy error']);
-    return;
-  }
-
   // HttpError かどうかを判定
   if (err instanceof HttpError) {
     sendError(res, err.statusCode, [err.message]);
