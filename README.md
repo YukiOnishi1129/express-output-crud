@@ -1,5 +1,14 @@
 # express-output-crud
 
+express サンプル API
+
+CRUD 処理と以下の機能を実装
+
+- 静的解析
+- 単体テスト
+- E2E テスト
+- CI
+
 ## 技術構成
 
 - typescript
