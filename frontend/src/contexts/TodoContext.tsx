@@ -8,7 +8,7 @@ type Props = {
 
 interface ContextInterface {
   originTodoList: Array<TodoType>;
-  addTodo: (title: string, content: string) => Promise<void>;
+  addTodo: (title: string, content: string) => Promise<boolean>;
   updateTodo: (id: number, title: string, content: string) => Promise<void>;
   deleteTodo: (targetId: number) => Promise<void>;
 }

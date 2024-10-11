@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { globalAxios, isAxiosError } from "./config";
-import { ResponseTodoListType, ResponseTodoType } from "../interfaces/Todo";
+import { TodoType } from "../interfaces/Todo";
 
 /**
  * Todoリスト取得のAPI接続処理
@@ -8,9 +8,7 @@ import { ResponseTodoListType, ResponseTodoType } from "../interfaces/Todo";
  */
 export const fetchTodoListApi = async () => {
   try {
-    const res: AxiosResponse<ResponseTodoListType> = await globalAxios.get(
-      "/todos"
-    );
+    const res: AxiosResponse<Array<TodoType>> = await globalAxios.get("/todos");
     return res.data;
   } catch (err) {
     if (isAxiosError(err)) {
@@ -26,10 +24,8 @@ export const fetchTodoListApi = async () => {
  */
 export const fetchTodoDetailApi = async (id: number) => {
   try {
-    const { data }: AxiosResponse<ResponseTodoType> = await globalAxios.get(
-      `/todos/${id}`
-    );
-    return data;
+    const res: AxiosResponse<TodoType> = await globalAxios.get(`/todos/${id}`);
+    return res.data;
   } catch (err) {
     if (isAxiosError(err)) {
       return err.code;
@@ -45,13 +41,10 @@ export const fetchTodoDetailApi = async (id: number) => {
  */
 export const createTodoApi = async (title: string, content: string) => {
   try {
-    const { data }: AxiosResponse<ResponseTodoType> = await globalAxios.post(
-      "/todos",
-      {
-        title,
-        content,
-      }
-    );
+    const { data }: AxiosResponse<TodoType> = await globalAxios.post("/todos", {
+      title,
+      content,
+    });
     return data;
   } catch (err) {
     if (isAxiosError(err)) {
@@ -73,7 +66,7 @@ export const updateTodoApi = async (
   content: string
 ) => {
   try {
-    const { data }: AxiosResponse<ResponseTodoType> = await globalAxios.patch(
+    const { data }: AxiosResponse<TodoType> = await globalAxios.put(
       `/todos/${id}`,
       {
         title,
@@ -95,7 +88,7 @@ export const updateTodoApi = async (
  */
 export const deleteTodoApi = async (id: number) => {
   try {
-    const { data }: AxiosResponse<ResponseTodoType> = await globalAxios.delete(
+    const { data }: AxiosResponse<TodoType> = await globalAxios.delete(
       `/todos/${id}`
     );
     return data;

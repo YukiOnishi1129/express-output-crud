@@ -1,27 +1,13 @@
 import { Response } from 'express';
 
-interface IResponseSchema<T> {
-  data?: T;
-  status: number;
-}
-
 type ResponseSuccessStatus = 200 | 201 | 204;
-
-export const respondWithSchema = <T>(
-  response: IResponseSchema<T>,
-): IResponseSchema<T> => response;
 
 export const sendSuccess = <T>(
   res: Response,
   status: ResponseSuccessStatus,
   data: T | null = null,
 ) => {
-  return res.status(status).send(
-    respondWithSchema({
-      data,
-      status: status,
-    }),
-  );
+  return res.status(status).send(data);
 };
 
 export const sendError = (
@@ -45,5 +31,7 @@ export const sendError = (
       break;
     default:
   }
-  return res.status(status).send({ errors, status });
+  return res.status(status).send({
+    errors,
+  });
 };
