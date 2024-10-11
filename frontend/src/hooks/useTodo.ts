@@ -31,7 +31,9 @@ export const useTodo = () => {
             content: data.content,
           },
         ]);
+        return true;
       }
+      return false;
     },
     [originTodoList]
   );
