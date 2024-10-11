@@ -14,7 +14,7 @@ describe('【E2E Test Todo API 】', () => {
     it('Success: get 0 data', async () => {
       const response = await request(app).get('/api/todos');
       expect(response.status).toBe(200);
-      expect(response.body.data).toEqual([]);
+      expect(response.body).toEqual([]);
     });
 
     it('Success: get data', async () => {
@@ -31,7 +31,7 @@ describe('【E2E Test Todo API 】', () => {
       await todoRepo.save(expectedTodos);
       const response = await request(app).get('/api/todos');
       expect(response.status).toBe(200);
-      expect(response.body.data).toMatchObject([
+      expect(response.body).toMatchObject([
         {
           title: 'Test Todo1',
           content: 'This is a test todo item1.',
@@ -59,7 +59,7 @@ describe('【E2E Test Todo API 】', () => {
         keyword: 'Todo1',
       });
       expect(response.status).toBe(200);
-      expect(response.body.data).toMatchObject([
+      expect(response.body).toMatchObject([
         {
           title: 'Test Todo1',
           content: 'This is a test todo item1.',
@@ -77,7 +77,7 @@ describe('【E2E Test Todo API 】', () => {
       const createdTodo = await todoRepo.save(expected);
       const received = await request(app).get(`/api/todos/${createdTodo.id}`);
       expect(received.status).toBe(200);
-      expect(received.body.data).toMatchObject({
+      expect(received.body).toMatchObject({
         id: createdTodo.id,
         title: expected.title,
         content: expected.content,
@@ -114,7 +114,7 @@ describe('【E2E Test Todo API 】', () => {
       const received = await request(app).post('/api/todos').send(expected);
 
       expect(received.status).toBe(201);
-      expect(received.body.data).toMatchObject(expected);
+      expect(received.body).toMatchObject(expected);
     });
 
     it('Success: create todo with 30 length title', async () => {
@@ -126,7 +126,7 @@ describe('【E2E Test Todo API 】', () => {
       const received = await request(app).post('/api/todos').send(expected);
 
       expect(received.status).toBe(201);
-      expect(received.body.data).toMatchObject(expected);
+      expect(received.body).toMatchObject(expected);
     });
 
     it('Fail: validation error not title request parameter', async () => {
@@ -204,7 +204,7 @@ describe('【E2E Test Todo API 】', () => {
         });
 
       expect(received.status).toBe(200);
-      expect(received.body.data).toMatchObject(expected);
+      expect(received.body).toMatchObject(expected);
     });
 
     it('Success: create todo with 30 length title', async () => {
@@ -222,7 +222,7 @@ describe('【E2E Test Todo API 】', () => {
         });
 
       expect(received.status).toBe(200);
-      expect(received.body.data).toMatchObject(expected);
+      expect(received.body).toMatchObject(expected);
     });
 
     it('Fail: Not Found', async () => {
@@ -352,6 +352,8 @@ describe('【E2E Test Todo API 】', () => {
     it('Fail: validation error not integer id', async () => {
       const received = await request(app).delete(`/api/todos/aaaa`);
       expect(received.status).toBe(400);
+      console.log('🔥');
+      console.log(received);
       expect(received.body.errors[0]).toBe('id must be a positive integer');
     });
   });

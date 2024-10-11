@@ -16,20 +16,19 @@ export const useTodo = () => {
   const fetchTodoList = useCallback(async (): Promise<void> => {
     const data = await fetchTodoListApi();
 
-    if (data && typeof data !== "string" && data?.data)
-      setOriginTodoList(data.data);
+    if (data && typeof data !== "string") setOriginTodoList(data);
   }, []);
 
   const addTodo = useCallback(
     async (title: string, content: string) => {
       const data = await createTodoApi(title, content);
-      if (data && typeof data !== "string" && data?.data) {
+      if (data && typeof data !== "string") {
         setOriginTodoList([
           ...originTodoList,
           {
-            id: data.data.id,
-            title: data.data.title,
-            content: data.data.content,
+            id: data.id,
+            title: data.title,
+            content: data.content,
           },
         ]);
       }
@@ -40,17 +39,13 @@ export const useTodo = () => {
   const updateTodo = useCallback(
     async (id: number, title: string, content: string) => {
       const responseTodo = await updateTodoApi(id, title, content);
-      if (
-        responseTodo &&
-        typeof responseTodo !== "string" &&
-        responseTodo?.data
-      ) {
+      if (responseTodo && typeof responseTodo !== "string") {
         const updatedTodoList = originTodoList.map((todo) => {
-          if (responseTodo.data?.id === todo.id) {
+          if (responseTodo.id === todo.id) {
             return {
-              id: responseTodo.data.id,
-              title: responseTodo.data.title,
-              content: responseTodo.data.content,
+              id: responseTodo.id,
+              title: responseTodo.title,
+              content: responseTodo.content,
             };
           }
 

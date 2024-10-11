@@ -15,11 +15,11 @@ export const TodoDetailTemplate = () => {
 
   const fetchTodoDetail = useCallback(async () => {
     const data = await fetchTodoDetailApi(Number(id));
-    if (data && typeof data !== "string" && data?.data) {
+    if (data && typeof data !== "string") {
       setTodo({
-        id: data.data.id,
-        title: data.data.title,
-        content: data.data.content,
+        id: data.id,
+        title: data.title,
+        content: data.content,
       });
     }
   }, [id]);
