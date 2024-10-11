@@ -3,8 +3,11 @@ import { mockRequest, mockResponse } from 'jest-mock-req-res';
 import { AppDataSource } from '@/config/appDataSource';
 import { Todo } from '@/domain/entity/todo.entity';
 
-import { getTodoListHandler } from '@/controller/todo.controller';
-import { sendSuccess } from '@/shared/response/sendResponse';
+import {
+  getTodoByIdHandler,
+  getTodoListHandler,
+} from '@/controller/todo.controller';
+import { sendSuccess, sendError } from '@/shared/response/sendResponse';
 
 jest.mock('@/shared/response/sendResponse');
 
@@ -102,6 +105,37 @@ describe('【Controller Test Todo】 ', () => {
           }),
         ]),
       );
+    });
+  });
+
+  describe('【getTodoByIdHandler】', () => {
+    it('Success: get data by id', async () => {
+      const todoRepo = AppDataSource.getInstance().getRepository(Todo);
+      await todoRepo.save({
+        id: 1,
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
+
+      req.params = { id: '1' };
+      await getTodoByIdHandler(req, res, next);
+
+      expect(sendSuccess).toHaveBeenCalledWith(
+        res,
+        200,
+        expect.objectContaining({
+          id: 1,
+          title: 'Test Todo',
+          content: 'This is a test todo item.',
+        }),
+      );
+    });
+
+    it('Fail: Not Found', async () => {
+      req.params = { id: '1' };
+      await getTodoByIdHandler(req, res, next);
+
+      expect(sendError).toHaveBeenCalledWith(res, 404, ['Todo not found']);
     });
   });
 });
