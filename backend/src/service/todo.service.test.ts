@@ -3,6 +3,7 @@ import { Todo } from '@/domain/entity/todo.entity';
 
 import {
   createNewTodo,
+  deleteExistingTodo,
   getTodoById,
   getTodoList,
   updateExistingTodo,
@@ -151,6 +152,29 @@ describe('【Service Test Todo】 ', () => {
           title: 'Updated Todo',
           content: 'This is an updated todo item.',
         });
+      } catch (error) {
+        expect(error).toEqual(new HttpError(404, 'Todo not found'));
+      }
+    });
+  });
+
+  describe('【deleteExistingTodo】', () => {
+    it('Success: delete existing todo', async () => {
+      const todoRepo = AppDataSource.getInstance().getRepository(Todo);
+      await todoRepo.save({
+        id: 1,
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
+
+      await deleteExistingTodo(1);
+
+      const result = await todoRepo.findOne({ where: { id: 1 } });
+      expect(result).toBeNull();
+    });
+    it('Error: delete existing todo', async () => {
+      try {
+        await getTodoById(1);
       } catch (error) {
         expect(error).toEqual(new HttpError(404, 'Todo not found'));
       }
