@@ -5,6 +5,7 @@ import {
   createNewTodo,
   getTodoById,
   getTodoList,
+  updateExistingTodo,
 } from '@/service/todo.service';
 import { HttpError } from '@/shared/errors/httpError';
 
@@ -119,6 +120,40 @@ describe('【Service Test Todo】 ', () => {
         title: 'Test Todo',
         content: 'This is a test todo item.',
       });
+    });
+  });
+
+  describe('【updateExistingTodo】', () => {
+    it('Success: update existing todo', async () => {
+      const todoRepo = AppDataSource.getInstance().getRepository(Todo);
+      await todoRepo.save({
+        id: 1,
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
+
+      const updatedTodo = {
+        id: 1,
+        title: 'Updated Todo',
+        content: 'This is an updated todo item.',
+      };
+      const todo = await updateExistingTodo(updatedTodo);
+      expect(todo).toMatchObject({
+        id: 1,
+        title: 'Updated Todo',
+        content: 'This is an updated todo item.',
+      });
+    });
+    it('Error: update existing todo', async () => {
+      try {
+        await updateExistingTodo({
+          id: 1,
+          title: 'Updated Todo',
+          content: 'This is an updated todo item.',
+        });
+      } catch (error) {
+        expect(error).toEqual(new HttpError(404, 'Todo not found'));
+      }
     });
   });
 });
