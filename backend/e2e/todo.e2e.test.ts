@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { app } from '../src';
 import { Repository } from 'typeorm';
+import { app } from '../src';
 import { AppDataSource } from '../src/config/appDataSource';
 import { Todo } from '../src/domain/entity/todo.entity';
 
@@ -36,13 +36,67 @@ describe('Todo API E2E Test', () => {
   });
 
   describe('POST /api/todos', () => {
-    it('should create a new todo on POST /api/todos', async () => {
+    it('Success: create todo', async () => {
       const expected = { title: 'New Todo', content: 'This is a new todo.' };
 
       const received = await request(app).post('/api/todos').send(expected);
 
       expect(received.status).toBe(201);
       expect(received.body.data).toMatchObject(expected);
+    });
+
+    it('Success: create todo with 30 length title', async () => {
+      const expected = {
+        title: 'aiueo12345aiueo12345aiueo12345',
+        content: 'This is a new todo.',
+      };
+
+      const received = await request(app).post('/api/todos').send(expected);
+
+      expect(received.status).toBe(201);
+      expect(received.body.data).toMatchObject(expected);
+    });
+
+    it('Failed: validation error not title request parameter', async () => {
+      const expected = {
+        content: 'This is a new todo.',
+      };
+
+      const received = await request(app).post('/api/todos').send(expected);
+      expect(received.status).toBe(400);
+      expect(received.body.errors[0]).toBe('title must not be empty');
+    });
+
+    it('Failed: validation error over title length', async () => {
+      const expected = {
+        title: 'aiueo12345aiueo12345aiueo12345a',
+        content: 'This is a new todo.',
+      };
+
+      const received = await request(app).post('/api/todos').send(expected);
+      expect(received.status).toBe(400);
+      expect(received.body.errors[0]).toBe(
+        'title must not exceed 30 characters',
+      );
+    });
+
+    it('Failed: validation error not content request parameter', async () => {
+      const expected = {
+        title: 'Todo1',
+      };
+
+      const received = await request(app).post('/api/todos').send(expected);
+      expect(received.status).toBe(400);
+      expect(received.body.errors[0]).toBe('content must not be empty');
+    });
+
+    it('Failed: validation multi error', async () => {
+      const expected = {};
+
+      const received = await request(app).post('/api/todos').send(expected);
+      expect(received.status).toBe(400);
+      expect(received.body.errors[0]).toBe('title must not be empty');
+      expect(received.body.errors[1]).toBe('content must not be empty');
     });
   });
 });
