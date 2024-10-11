@@ -4,6 +4,7 @@ import { AppDataSource } from '@/config/appDataSource';
 import { Todo } from '@/domain/entity/todo.entity';
 
 import {
+  createNewTodoHandler,
   getTodoByIdHandler,
   getTodoListHandler,
 } from '@/controller/todo.controller';
@@ -136,6 +137,27 @@ describe('【Controller Test Todo】 ', () => {
       await getTodoByIdHandler(req, res, next);
 
       expect(sendError).toHaveBeenCalledWith(res, 404, ['Todo not found']);
+    });
+  });
+
+  describe('【createNewTodoHandler】', () => {
+    it('Success: create new todo', async () => {
+      req.body = {
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      };
+
+      await createNewTodoHandler(req, res, next);
+
+      expect(sendSuccess).toHaveBeenCalledWith(
+        res,
+        201,
+        expect.objectContaining({
+          id: 1,
+          title: 'Test Todo',
+          content: 'This is a test todo item.',
+        }),
+      );
     });
   });
 });
