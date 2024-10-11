@@ -26,10 +26,10 @@ export const fetchTodoListApi = async () => {
  */
 export const fetchTodoDetailApi = async (id: number) => {
   try {
-    const { data }: AxiosResponse<ResponseTodoType> = await globalAxios.get(
+    const res: AxiosResponse<ResponseTodoType> = await globalAxios.get(
       `/todos/${id}`
     );
-    return data;
+    return res.data;
   } catch (err) {
     if (isAxiosError(err)) {
       return err.code;
