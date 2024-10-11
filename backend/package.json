@@ -9,6 +9,7 @@
     "dev": "nodemon --watch 'src/**/*' --exec 'ts-node' src/index.ts",
     "lint": "npx eslint src/**",
     "test": "jest --silent",
+    "test:e2e": "jest --config=jest.e2e.config.ts --silent --detectOpenHandles",
     "test:watch": "jest --watch --silent",
     "test:log": "jest",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
