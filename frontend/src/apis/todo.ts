@@ -66,7 +66,7 @@ export const updateTodoApi = async (
   content: string
 ) => {
   try {
-    const { data }: AxiosResponse<TodoType> = await globalAxios.patch(
+    const { data }: AxiosResponse<TodoType> = await globalAxios.put(
       `/todos/${id}`,
       {
         title,
