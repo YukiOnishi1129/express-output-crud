@@ -171,4 +171,153 @@ describe('【E2E Test Todo API 】', () => {
       expect(received.body.errors[1]).toBe('content must not be empty');
     });
   });
+
+  describe('【PUT /api/todos】', () => {
+    beforeEach(async () => {
+      const todoList = [
+        {
+          id: 1,
+          title: 'Test Todo1',
+          content: 'This is a test todo item1.',
+        },
+        {
+          id: 2,
+          title: 'Test Todo2',
+          content: 'This is a test todo item2.',
+        },
+      ];
+
+      await todoRepo.save(todoList);
+    });
+    it('Success: update todo', async () => {
+      const expected = {
+        id: 1,
+        title: 'Update Todo1',
+        content: 'This is a update todo.',
+      };
+
+      const received = await request(app)
+        .put(`/api/todos/${expected.id}`)
+        .send({
+          title: expected.title,
+          content: expected.content,
+        });
+
+      expect(received.status).toBe(200);
+      expect(received.body.data).toMatchObject(expected);
+    });
+
+    it('Success: create todo with 30 length title', async () => {
+      const expected = {
+        id: 1,
+        title: 'aiueo12345aiueo12345aiueo12345',
+        content: 'This is a update todo.',
+      };
+
+      const received = await request(app)
+        .put(`/api/todos/${expected.id}`)
+        .send({
+          title: expected.title,
+          content: expected.content,
+        });
+
+      expect(received.status).toBe(200);
+      expect(received.body.data).toMatchObject(expected);
+    });
+
+    it('Fail: Not FOund', async () => {
+      const expected = {
+        id: 4,
+        title: 'aiueo12345aiueo12345aiueo12345',
+        content: 'This is a update todo.',
+      };
+
+      const received = await request(app)
+        .put(`/api/todos/${expected.id}`)
+        .send({
+          title: expected.title,
+          content: expected.content,
+        });
+
+      expect(received.status).toBe(404);
+      expect(received.body.errors[0]).toBe('Not Found');
+    });
+
+    it('Fail:  validation error not integer id', async () => {
+      const expected = {
+        id: 'aaaa',
+        title: 'aiueo12345aiueo12345aiueo12345',
+        content: 'This is a update todo.',
+      };
+
+      const received = await request(app)
+        .put(`/api/todos/${expected.id}`)
+        .send({
+          title: expected.title,
+          content: expected.content,
+        });
+
+      expect(received.status).toBe(400);
+      expect(received.body.errors[0]).toBe('id must be a positive integer');
+    });
+
+    it('Fail: validation error not title request parameter', async () => {
+      const expected = {
+        id: 1,
+        content: 'This is a update todo.',
+      };
+
+      const received = await request(app)
+        .put(`/api/todos/${expected.id}`)
+        .send({
+          content: expected.content,
+        });
+      expect(received.status).toBe(400);
+      expect(received.body.errors[0]).toBe('title must not be empty');
+    });
+
+    it('Fail: validation error over title length', async () => {
+      const expected = {
+        id: 1,
+        title: 'aiueo12345aiueo12345aiueo12345a',
+        content: 'This is a update todo.',
+      };
+
+      const received = await request(app)
+        .put(`/api/todos/${expected.id}`)
+        .send({
+          title: expected.title,
+          content: expected.content,
+        });
+      expect(received.status).toBe(400);
+      expect(received.body.errors[0]).toBe(
+        'title must not exceed 30 characters',
+      );
+    });
+
+    it('Fail: validation error not content request parameter', async () => {
+      const expected = {
+        id: 1,
+        title: 'Todo1',
+      };
+
+      const received = await request(app)
+        .put(`/api/todos/${expected.id}`)
+        .send({
+          title: expected.title,
+        });
+      expect(received.status).toBe(400);
+      expect(received.body.errors[0]).toBe('content must not be empty');
+    });
+
+    it('Fail: validation multi error', async () => {
+      const expected = {};
+
+      const received = await request(app).put('/api/todos/aaaa').send(expected);
+      expect(received.status).toBe(400);
+      expect(received.body.errors[0]).toBe('id must be a positive integer');
+      expect(received.body.errors[1]).toBe('title must not be empty');
+      expect(received.body.errors[2]).toBe('content must not be empty');
+    });
+  });
 });
