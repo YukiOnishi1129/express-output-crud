@@ -7,6 +7,7 @@ import {
   createNewTodoHandler,
   getTodoByIdHandler,
   getTodoListHandler,
+  updateTodoHandler,
 } from '@/controller/todo.controller';
 import { sendSuccess, sendError } from '@/shared/response/sendResponse';
 
@@ -158,6 +159,47 @@ describe('【Controller Test Todo】 ', () => {
           content: 'This is a test todo item.',
         }),
       );
+    });
+  });
+
+  describe('【updateTodoHandler】', () => {
+    it('Success: update todo', async () => {
+      const todoRepo = AppDataSource.getInstance().getRepository(Todo);
+      await todoRepo.save({
+        id: 1,
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
+
+      req.params = { id: '1' };
+      req.body = {
+        title: 'Updated Todo',
+        content: 'This is an updated todo item.',
+      };
+
+      await updateTodoHandler(req, res, next);
+
+      expect(sendSuccess).toHaveBeenCalledWith(
+        res,
+        200,
+        expect.objectContaining({
+          id: 1,
+          title: 'Updated Todo',
+          content: 'This is an updated todo item.',
+        }),
+      );
+    });
+
+    it('Fail: Not Found', async () => {
+      req.params = { id: '1' };
+      req.body = {
+        title: 'Updated Todo',
+        content: 'This is an updated todo item.',
+      };
+
+      await updateTodoHandler(req, res, next);
+
+      expect(sendError).toHaveBeenCalledWith(res, 404, ['Todo not found']);
     });
   });
 });
