@@ -10,9 +10,6 @@ export const TodoListTemplate: FC = () => {
   // コンテキストから状態とロジックを呼び出してコンポーネントにあてがう
   const { originTodoList, deleteTodo } = useTodoContext();
 
-  console.log("💧");
-  console.log(originTodoList);
-
   const [
     { searchKeyword, showTodoList },
     { handleChangeSearchKeyword, handleDeleteTodo },

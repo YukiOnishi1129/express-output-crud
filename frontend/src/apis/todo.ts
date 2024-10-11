@@ -8,10 +8,10 @@ import { ResponseTodoListType, ResponseTodoType } from "../interfaces/Todo";
  */
 export const fetchTodoListApi = async () => {
   try {
-    const { data }: AxiosResponse<ResponseTodoListType> = await globalAxios.get(
+    const res: AxiosResponse<ResponseTodoListType> = await globalAxios.get(
       "/todos"
     );
-    return data;
+    return res.data;
   } catch (err) {
     if (isAxiosError(err)) {
       return err.code;

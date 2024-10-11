@@ -49,9 +49,7 @@ export const useTodoTemplate = ({ originTodoList, deleteTodo }: Params) => {
    */
   const handleDeleteTodo = useCallback(
     (targetId: number, targetTitle: string) => {
-      console.log("aaaa");
       if (window.confirm(`「${targetTitle}」のtodoを削除しますか？`)) {
-        console.log("hhhhh");
         deleteTodo(targetId);
       }
     },
