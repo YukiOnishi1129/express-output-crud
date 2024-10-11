@@ -17,19 +17,19 @@ export const start = async () => {
   const port = process.env.PORT || 3000;
 
   const corsOptions = {
-    origin: ['http://localhost:3000'], // 許可したいドメイン
+    origin: [process.env.FRONTEND_BASE_URL || 'http://localhost:3000'], // 許可したいドメイン
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // 許可したいHTTPメソッド
     allowedHeaders: ['Content-Type', 'Authorization'], // 許可したいヘッダー
   };
 
   app.use(cors(corsOptions));
   app.use(express.json());
-  app.use(errorHandler);
 
   AppDataSource.initialize()
     .then(() => {
       // ルーティング設定
       app.use(API_BASE_URL, apiRouter);
+      app.use(errorHandler);
 
       if (process.env.NODE_ENV !== 'test') {
         app.listen(port, () => {
