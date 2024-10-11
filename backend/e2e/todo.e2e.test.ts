@@ -11,13 +11,13 @@ describe('【E2E Test Todo API 】', () => {
     await todoRepo.clear();
   });
   describe('【GET /api/todos】', () => {
-    it('Success: get 0 todos', async () => {
+    it('Success: get 0 data', async () => {
       const response = await request(app).get('/api/todos');
       expect(response.status).toBe(200);
       expect(response.body.data).toEqual([]);
     });
 
-    it('Success: get todos', async () => {
+    it('Success: get data', async () => {
       const expectedTodos = [
         {
           title: 'Test Todo1',
@@ -43,7 +43,7 @@ describe('【E2E Test Todo API 】', () => {
       ]);
     });
 
-    it('Success: get searched todos', async () => {
+    it('Success: get searched data', async () => {
       const expectedTodos = [
         {
           title: 'Test Todo1',
