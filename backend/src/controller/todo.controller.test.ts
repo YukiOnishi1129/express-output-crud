@@ -5,6 +5,7 @@ import { Todo } from '@/domain/entity/todo.entity';
 
 import {
   createNewTodoHandler,
+  deleteTodoHandler,
   getTodoByIdHandler,
   getTodoListHandler,
   updateTodoHandler,
@@ -198,6 +199,29 @@ describe('【Controller Test Todo】 ', () => {
       };
 
       await updateTodoHandler(req, res, next);
+
+      expect(sendError).toHaveBeenCalledWith(res, 404, ['Todo not found']);
+    });
+  });
+
+  describe('【deleteTodoHandler】', () => {
+    it('Success: delete todo', async () => {
+      const todoRepo = AppDataSource.getInstance().getRepository(Todo);
+      await todoRepo.save({
+        id: 1,
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      });
+
+      req.params = { id: '1' };
+      await deleteTodoHandler(req, res, next);
+
+      expect(sendSuccess).toHaveBeenCalledWith(res, 204);
+    });
+
+    it('Fail: Not Found', async () => {
+      req.params = { id: '1' };
+      await deleteTodoHandler(req, res, next);
 
       expect(sendError).toHaveBeenCalledWith(res, 404, ['Todo not found']);
     });
