@@ -5,21 +5,71 @@ import { AppDataSource } from '../src/config/appDataSource';
 import { Todo } from '../src/domain/entity/todo.entity';
 
 let todoRepo: Repository<Todo>;
-describe('Todo API E2E Test', () => {
+describe('【E2E Test Todo API 】', () => {
   beforeEach(async () => {
     todoRepo = AppDataSource.getInstance().getRepository(Todo);
     await todoRepo.clear();
   });
-  describe('GET /api/todos', () => {
-    it('should return an empty todo list on GET /api/todos', async () => {
+  describe('【GET /api/todos】', () => {
+    it('Success: get 0 todos', async () => {
       const response = await request(app).get('/api/todos');
       expect(response.status).toBe(200);
       expect(response.body.data).toEqual([]);
     });
+
+    it('Success: get todos', async () => {
+      const expectedTodos = [
+        {
+          title: 'Test Todo1',
+          content: 'This is a test todo item1.',
+        },
+        {
+          title: 'Test Todo2',
+          content: 'This is a test todo item2.',
+        },
+      ];
+      await todoRepo.save(expectedTodos);
+      const response = await request(app).get('/api/todos');
+      expect(response.status).toBe(200);
+      expect(response.body.data).toMatchObject([
+        {
+          title: 'Test Todo1',
+          content: 'This is a test todo item1.',
+        },
+        {
+          title: 'Test Todo2',
+          content: 'This is a test todo item2.',
+        },
+      ]);
+    });
+
+    it('Success: get searched todos', async () => {
+      const expectedTodos = [
+        {
+          title: 'Test Todo1',
+          content: 'This is a test todo item1.',
+        },
+        {
+          title: 'Test Todo2',
+          content: 'This is a test todo item2.',
+        },
+      ];
+      await todoRepo.save(expectedTodos);
+      const response = await request(app).get('/api/todos').query({
+        keyword: 'Todo1',
+      });
+      expect(response.status).toBe(200);
+      expect(response.body.data).toMatchObject([
+        {
+          title: 'Test Todo1',
+          content: 'This is a test todo item1.',
+        },
+      ]);
+    });
   });
 
-  describe('GET /api/todos/:id', () => {
-    it('should return a todo item on GET /api/todos/:id', async () => {
+  describe('【GET /api/todos/:id】', () => {
+    it('Success: get todo', async () => {
       const expected = {
         title: 'Test Todo',
         content: 'This is a test todo item.',
@@ -33,9 +83,31 @@ describe('Todo API E2E Test', () => {
         content: expected.content,
       });
     });
+
+    it('Fail: not founded', async () => {
+      const expected = {
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      };
+      await todoRepo.save(expected);
+      const received = await request(app).get(`/api/todos/2`);
+      expect(received.status).toBe(404);
+      expect(received.body.errors[0]).toBe('Not Found');
+    });
+
+    it('Fail: validation error not integer id', async () => {
+      const expected = {
+        title: 'Test Todo',
+        content: 'This is a test todo item.',
+      };
+      await todoRepo.save(expected);
+      const received = await request(app).get(`/api/todos/aaaaa`);
+      expect(received.status).toBe(400);
+      expect(received.body.errors[0]).toBe('id must be a positive integer');
+    });
   });
 
-  describe('POST /api/todos', () => {
+  describe('【POST /api/todos】', () => {
     it('Success: create todo', async () => {
       const expected = { title: 'New Todo', content: 'This is a new todo.' };
 
@@ -57,7 +129,7 @@ describe('Todo API E2E Test', () => {
       expect(received.body.data).toMatchObject(expected);
     });
 
-    it('Failed: validation error not title request parameter', async () => {
+    it('Fail: validation error not title request parameter', async () => {
       const expected = {
         content: 'This is a new todo.',
       };
@@ -67,7 +139,7 @@ describe('Todo API E2E Test', () => {
       expect(received.body.errors[0]).toBe('title must not be empty');
     });
 
-    it('Failed: validation error over title length', async () => {
+    it('Fail: validation error over title length', async () => {
       const expected = {
         title: 'aiueo12345aiueo12345aiueo12345a',
         content: 'This is a new todo.',
@@ -80,7 +152,7 @@ describe('Todo API E2E Test', () => {
       );
     });
 
-    it('Failed: validation error not content request parameter', async () => {
+    it('Fail: validation error not content request parameter', async () => {
       const expected = {
         title: 'Todo1',
       };
@@ -90,7 +162,7 @@ describe('Todo API E2E Test', () => {
       expect(received.body.errors[0]).toBe('content must not be empty');
     });
 
-    it('Failed: validation multi error', async () => {
+    it('Fail: validation multi error', async () => {
       const expected = {};
 
       const received = await request(app).post('/api/todos').send(expected);
