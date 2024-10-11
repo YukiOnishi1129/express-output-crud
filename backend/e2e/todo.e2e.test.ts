@@ -225,7 +225,7 @@ describe('【E2E Test Todo API 】', () => {
       expect(received.body.data).toMatchObject(expected);
     });
 
-    it('Fail: Not FOund', async () => {
+    it('Fail: Not Found', async () => {
       const expected = {
         id: 4,
         title: 'aiueo12345aiueo12345aiueo12345',
@@ -318,6 +318,41 @@ describe('【E2E Test Todo API 】', () => {
       expect(received.body.errors[0]).toBe('id must be a positive integer');
       expect(received.body.errors[1]).toBe('title must not be empty');
       expect(received.body.errors[2]).toBe('content must not be empty');
+    });
+  });
+
+  describe('【DELETE /api/todos】', () => {
+    beforeEach(async () => {
+      const todoList = [
+        {
+          id: 1,
+          title: 'Test Todo1',
+          content: 'This is a test todo item1.',
+        },
+        {
+          id: 2,
+          title: 'Test Todo2',
+          content: 'This is a test todo item2.',
+        },
+      ];
+
+      await todoRepo.save(todoList);
+    });
+    it('Success: delete todo', async () => {
+      const received = await request(app).delete(`/api/todos/1`);
+      expect(received.status).toBe(204);
+    });
+
+    it('Fail: Not Found', async () => {
+      const received = await request(app).delete(`/api/todos/3`);
+      expect(received.status).toBe(404);
+      expect(received.body.errors[0]).toBe('Not Found');
+    });
+
+    it('Fail: validation error not integer id', async () => {
+      const received = await request(app).delete(`/api/todos/aaaa`);
+      expect(received.status).toBe(400);
+      expect(received.body.errors[0]).toBe('id must be a positive integer');
     });
   });
 });
