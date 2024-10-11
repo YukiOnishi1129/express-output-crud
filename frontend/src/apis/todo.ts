@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { globalAxios, isAxiosError } from "./config";
-import { TodoType } from "../interfaces/Todo";
+import { ResponseTodoListType, ResponseTodoType } from "../interfaces/Todo";
 
 /**
  * Todoリスト取得のAPI接続処理
@@ -8,7 +8,7 @@ import { TodoType } from "../interfaces/Todo";
  */
 export const fetchTodoListApi = async () => {
   try {
-    const { data }: AxiosResponse<Array<TodoType>> = await globalAxios.get(
+    const { data }: AxiosResponse<ResponseTodoListType> = await globalAxios.get(
       "/todos"
     );
     return data;
@@ -26,7 +26,7 @@ export const fetchTodoListApi = async () => {
  */
 export const fetchTodoDetailApi = async (id: number) => {
   try {
-    const { data }: AxiosResponse<TodoType> = await globalAxios.get(
+    const { data }: AxiosResponse<ResponseTodoType> = await globalAxios.get(
       `/todos/${id}`
     );
     return data;
@@ -45,10 +45,13 @@ export const fetchTodoDetailApi = async (id: number) => {
  */
 export const createTodoApi = async (title: string, content: string) => {
   try {
-    const { data }: AxiosResponse<TodoType> = await globalAxios.post("/todos", {
-      title,
-      content,
-    });
+    const { data }: AxiosResponse<ResponseTodoType> = await globalAxios.post(
+      "/todos",
+      {
+        title,
+        content,
+      }
+    );
     return data;
   } catch (err) {
     if (isAxiosError(err)) {
@@ -70,7 +73,7 @@ export const updateTodoApi = async (
   content: string
 ) => {
   try {
-    const { data }: AxiosResponse<TodoType> = await globalAxios.patch(
+    const { data }: AxiosResponse<ResponseTodoType> = await globalAxios.patch(
       `/todos/${id}`,
       {
         title,
@@ -92,7 +95,7 @@ export const updateTodoApi = async (
  */
 export const deleteTodoApi = async (id: number) => {
   try {
-    const { data }: AxiosResponse<TodoType> = await globalAxios.delete(
+    const { data }: AxiosResponse<ResponseTodoType> = await globalAxios.delete(
       `/todos/${id}`
     );
     return data;

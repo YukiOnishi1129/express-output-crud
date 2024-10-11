@@ -1,23 +1,17 @@
-/**
- * TodoListTemplate
- *
- * @package components
- */
 import { BaseLayout } from "../../Organism/BaseLayout";
 import { InputForm } from "../../Atom/InputForm";
-import { TodoList } from "@/components/organisms/TodoList";
-import { useTodoContext } from "@/contexts/TodoContext";
+import { TodoList } from "../../Organism/TodoList";
+import { useTodoContext } from "../../../contexts/useTodoContext";
 import { useTodoTemplate } from "./useTodoTemplate";
 import styles from "./styles.module.css";
+import { FC } from "react";
 
-/**
- * TodoListTemplate
- * @returns {JSX.Element}
- * @constructor
- */
-export const TodoListTemplate = () => {
+export const TodoListTemplate: FC = () => {
   // コンテキストから状態とロジックを呼び出してコンポーネントにあてがう
   const { originTodoList, deleteTodo } = useTodoContext();
+
+  console.log("💧");
+  console.log(originTodoList);
 
   const [
     { searchKeyword, showTodoList },
