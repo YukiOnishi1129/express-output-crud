@@ -12,6 +12,5 @@ export const MigrationDataSource = new DataSource({
   database: process.env.MYSQL_DATABASE_USING_MIGRATION,
   entities: ['src/domain/entity/*.ts'],
   migrations: ['src/database/migrations/**/*.ts'],
-  logging: true,
-  synchronize: true,
+  logging: false,
 });
