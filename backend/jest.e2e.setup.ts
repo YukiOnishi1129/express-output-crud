@@ -2,6 +2,7 @@ import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { DataSource } from 'typeorm';
 import { AppDataSource } from './src/config/appDataSource';
 import { start } from './src';
+import { initTestDatabase } from './src/database/test/initTestDatabase';
 
 let mysqlContainer: StartedTestContainer;
 let dataSource: DataSource;
@@ -31,13 +32,7 @@ global.beforeAll(async () => {
   // データソースを初期化
   dataSource = await AppDataSource.initialize();
 
-  // データベースの作成
-  await dataSource.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
-
-  // テーブルの作成
-  await dataSource.query(
-    `CREATE TABLE IF NOT EXISTS \`todos\` (\`id\` int NOT NULL AUTO_INCREMENT, \`title\` varchar(50) NOT NULL, \`content\` text NOT NULL, \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
-  );
+  await initTestDatabase(dataSource, dbName);
 
   await start();
 }, 30000);
